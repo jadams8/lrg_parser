@@ -4,7 +4,7 @@ lrg1 = ET.parse('data/LRG_1.xml')
 root = lrg1.getroot() # set root as reference to read the rest of the XML file
 
 def lrg_parse():
-"""function will parse the LRG file to extract the exon number and LRG co-ordinates for the start and end of each codon"""
+	"""function will parse the LRG file to extract the exon number and LRG co-ordinates for the start and end of each codon"""
 	data_list = [] # create the empty list to store the output
 	for exon in root.iter('exon'): # iterate through each exon in the LRG
 		if 'label' in exon.attrib.keys(): # ensure that the exon has a label so it is part of the transcript
