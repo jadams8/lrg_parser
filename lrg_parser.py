@@ -14,9 +14,6 @@ def lrg_parse():
 	return data_list
 
 data = lrg_parse() # store the output from lrg_parse() in a variable to write to a file
-print(data)
-
-# create a list of strings from data
 
 with open('lrg1.txt', 'w') as myfile:
 	for my_list in data:
