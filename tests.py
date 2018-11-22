@@ -1,13 +1,13 @@
 """Tests for lrg_parser"""
-import os
+import os, subprocess
 import lrg_parser
 
 def test_creates_file():
     '''Test that it creates a new file from an XML input'''
     # Call from command line 
-    lrg_parser.lrg_parse('data/LRG_1.xml')
+    subprocess.call(['python', 'lrg_parser.py', 'data/LRG_1.xml'])
     # Assert that a file was output
-    assert os.path.isfile('lrg1.txt')
+    assert os.path.isfile('data/LRG_1.bed')
 
 def test_all_exons():
     """Test all LRG_5 exon labels are present in first column of lrg_parser output"""
