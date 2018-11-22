@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-import os, argparse, fnmatch
+import os, argparse, fnmatch, re
 
 
 def lrg_parse(xml_file):
@@ -16,8 +16,11 @@ def lrg_parse(xml_file):
 			for child in exon:
 				# make sure the only co-ordinates printed are the LRG co-ordinates
 				if fnmatch.filter(child.attrib.values(), 'LRG_?'):
-					data_list.append((exon.attrib['label'], child.attrib['start'], child.attrib['end']))
-	return set(data_list)
+					data_to_append = (exon.attrib['label'], child.attrib['start'], child.attrib['end'])
+					if data_to_append not in data_list:
+						data_list.append(data_to_append)
+	sorted_data = sorted(data_list, key=lambda line: int(re.split('[A-Za-z]+', line[0])[0]))
+	return sorted_data
 
 
 def main():
