@@ -16,8 +16,8 @@ def lrg_parse(xml_file):
 			for child in exon:
 				# make sure the only co-ordinates printed are the LRG co-ordinates
 				if fnmatch.filter(child.attrib.values(), 'LRG_?'):
-					data_list.append([exon.attrib['label'], child.attrib['start'], child.attrib['end']])
-	return data_list
+					data_list.append((exon.attrib['label'], child.attrib['start'], child.attrib['end']))
+	return set(data_list)
 
 
 def main():
@@ -31,10 +31,10 @@ def main():
 	file_name = args.xml_file.split('.')[0]+'.bed'
 
 	with open(file_name, 'w') as myfile:
-		for my_list in data:
+		for my_tuple in data:
 			# reformat the list to tab seperated and different lines
-			new_list = "\t".join(my_list) + '\n'
-			myfile.write(new_list)
+			my_list = "\t".join(my_tuple) + '\n'
+			myfile.write(my_list)
 
 if __name__ == "__main__":
 	main()
