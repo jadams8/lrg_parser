@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-import os, argparse, fnmatch, re
+import os, argparse, fnmatch, re, requests
 
 
 def lrg_parse(xml_file):
@@ -28,6 +28,12 @@ def write_file(data, file_name):
 			# reformat the list to tab seperated and different lines
 			my_list = "\t".join(my_tuple) + '\n'
 			myfile.write(my_list)
+
+def get_file(lrg_num):
+	website = 'http://ftp.ebi.ac.uk/pub/databases/lrgex/'+ lrg_num +'.xml'
+	xml_text = requests.get(website)
+	return xml_text.text
+	# ET.fromstring(...)
 
 
 def main():
