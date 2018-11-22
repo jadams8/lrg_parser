@@ -2,11 +2,12 @@ import xml.etree.ElementTree as ET
 import os, argparse, fnmatch, re, requests
 
 
-def lrg_parse(xml_file):
-	"""function will parse the LRG file to extract the exon number and LRG co-ordinates for the start and end of each codon"""
+def parse_file(xml_file):
 	lrg = ET.parse(xml_file)
-	# set root as reference to read the rest of the XML file
 	root = lrg.getroot()
+	return root
+
+def lrg_parse(root):
 	# create the empty list to store the output
 	data_list = []
 	# iterate through each exon in the LRG
@@ -32,8 +33,12 @@ def write_file(data, file_name):
 def get_file(lrg_num):
 	website = 'http://ftp.ebi.ac.uk/pub/databases/lrgex/'+ lrg_num +'.xml'
 	xml_text = requests.get(website)
-	return xml_text.text
-	# ET.fromstring(...)
+	if xml_text.status_code == 404:
+		website = 'http://ftp.ebi.ac.uk/pub/databases/lrgex/pending/'+ lrg_num +'.xml'
+		print(website)
+		xml_text = requests.get(website)
+	root = ET.fromstring(xml_text.text)
+	return root
 
 
 def main():
@@ -44,11 +49,12 @@ def main():
 	# store the output from lrg_parse() in a variable to write to a file
 	files_to_parse = args.xml_file
 	for f in files_to_parse:
-		data = lrg_parse(f)
+		if os.path.isfile(f):
+			data = lrg_parse(parse_file(f))
+		else:
+			data = lrg_parse(get_file(f))
 		file_name = f.split('.')[0]+'.bed'
 		write_file(data, file_name)
-
-	
-
+		
 if __name__ == "__main__":
 	main()
