@@ -3,7 +3,7 @@ import os, subprocess
 import lrg_parser
 
 def test_creates_file():
-    '''Test that it creates a new file from an XML input'''
+    """Test that it creates a new file from an XML input"""
     # Call from command line
     subprocess.call(['python', 'lrg_parser.py', 'data/LRG_1.xml'])
     # Assert that a file was output
