@@ -19,13 +19,14 @@ def lrg_parse(xml_file):
 					data_list.append([exon.attrib['label'], child.attrib['start'], child.attrib['end']])
 	return data_list
 
+
 def main():
 	parser = argparse.ArgumentParser(description='Parse an XML file to produce a BED file')
 	parser.add_argument('xml_file', help='Enter the name of the LRG file to parse')
 	args = parser.parse_args()
 
 	# store the output from lrg_parse() in a variable to write to a file
-	data = lrg_parse(args.xml_file) 
+	data = lrg_parse(args.xml_file)
 
 	file_name = args.xml_file.split('.')[0]+'.bed'
 
