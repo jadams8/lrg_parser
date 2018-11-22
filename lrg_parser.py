@@ -22,22 +22,27 @@ def lrg_parse(xml_file):
 	sorted_data = sorted(data_list, key=lambda line: int(re.split('[A-Za-z]+', line[0])[0]))
 	return sorted_data
 
-
-def main():
-	parser = argparse.ArgumentParser(description='Parse an XML file to produce a BED file')
-	parser.add_argument('xml_file', help='Enter the name of the LRG file to parse')
-	args = parser.parse_args()
-
-	# store the output from lrg_parse() in a variable to write to a file
-	data = lrg_parse(args.xml_file)
-
-	file_name = args.xml_file.split('.')[0]+'.bed'
-
+def write_file(data, file_name):
 	with open(file_name, 'w') as myfile:
 		for my_tuple in data:
 			# reformat the list to tab seperated and different lines
 			my_list = "\t".join(my_tuple) + '\n'
 			myfile.write(my_list)
+
+
+def main():
+	parser = argparse.ArgumentParser(description='Parse an XML file to produce a BED file')
+	parser.add_argument('xml_file', nargs='+', help='Enter the names of the LRG file to parse')
+	args = parser.parse_args()
+
+	# store the output from lrg_parse() in a variable to write to a file
+	files_to_parse = args.xml_file
+	for f in files_to_parse:
+		data = lrg_parse(f)
+		file_name = f.split('.')[0]+'.bed'
+		write_file(data, file_name)
+
+	
 
 if __name__ == "__main__":
 	main()
