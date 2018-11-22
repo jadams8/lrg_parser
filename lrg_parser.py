@@ -59,7 +59,7 @@ def convert_coords(xml_root, sorted_data):
 	# Loop over LRG exon coordinates
 	for xml_tuple in sorted_data:
 		# Set LRG locations for reference genome
-		genome_loc1 = int(grch38_map['other_start'])
+		genome_loc = int(grch38_map['other_start'])
 		genome_loc2 = int(grch38_map['other_end'])
 		exon_label, lrg_start_pre, lrg_end_pre = xml_tuple
 		# Set LRG strat and end coordinates ( -1 for addition/subtraction from reference genome )
@@ -67,13 +67,13 @@ def convert_coords(xml_root, sorted_data):
 		lrg_end = int(lrg_end_pre) -1
 		# If reverse strand, swap genome start and end, multiply lrg coordinates by -1 to subtract
 		if grch38_map['strand'] == '-1':
-			genome_loc1, genome_loc2 = genome_loc2, genome_loc1
+			genome_loc = genome_loc2
 			lrg_start, lrg_end = map(lambda x: x*-1, [lrg_start, lrg_end])
 		# Set new coordinates tuple
 		coords = (
 			'chr' + str(grch38['other_name']),  # chromosome number
-			str(genome_loc1 + lrg_start),  # grch38 start coordinates
-			str(genome_loc1 + lrg_end)  # grch38 end coordinates
+			str(genome_loc + lrg_start),  # grch38 start coordinates
+			str(genome_loc + lrg_end)  # grch38 end coordinates
 		)
 		output.append(coords)
 	return output
