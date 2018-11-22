@@ -1,12 +1,12 @@
 import xml.etree.ElementTree as ET
-import os, argparse
+import os, argparse, fnmatch
 
 
 def lrg_parse(xml_file):
 	"""function will parse the LRG file to extract the exon number and LRG co-ordinates for the start and end of each codon"""
-	lrg1 = ET.parse(xml_file)
+	lrg = ET.parse(xml_file)
 	# set root as reference to read the rest of the XML file
-	root = lrg1.getroot()
+	root = lrg.getroot()
 	# create the empty list to store the output
 	data_list = []
 	# iterate through each exon in the LRG
@@ -15,7 +15,7 @@ def lrg_parse(xml_file):
 		if 'label' in exon.attrib.keys():
 			for child in exon:
 				# make sure the only co-ordinates printed are the LRG co-ordinates
-				if 'LRG_1' in child.attrib.values():
+				if fnmatch.filter(child.attrib.values(), 'LRG_?'):
 					data_list.append([exon.attrib['label'], child.attrib['start'], child.attrib['end']])
 	return data_list
 
