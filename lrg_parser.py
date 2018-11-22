@@ -89,11 +89,12 @@ def main():
 	for f in files_to_parse:
 		# call different functions depending on whether the XML file is 
 		# on the system or needs to be accessed from the web
-		if os.path.isfile(f):
-			data = lrg_parse(parse_file(f))
+		F = f.upper()
+		if os.path.isfile(F):
+			data = lrg_parse(parse_file(F))
 		else:
-			data = lrg_parse(get_file(f))
-		file_name = f.split('.')[0]+'.bed'
+			data = lrg_parse(get_file(F))
+		file_name = F.split('.')[0]+'.bed'
 		write_file(data, file_name)
 		
 if __name__ == "__main__":
