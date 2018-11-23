@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-import os, argparse, fnmatch, re, requests
+import os, argparse, fnmatch, re, requests, time
 
 
 def parse_file(xml_file):
@@ -104,7 +104,7 @@ def main():
 			except ET.ParseError:
 				print(f + ' does not exist.')
 				continue
-		file_name = f.split('.')[0]+'.bed'
+		file_name = f.split('.')[0]+ '_'+ time.strftime('%Y%m%d') +'.bed'
 		write_file(data, file_name)
 		print('bed file for ' + f + ' written to ' + file_name)
 		
