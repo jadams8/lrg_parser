@@ -9,6 +9,8 @@ def parse_file(xml_file):
 	return root
 
 def lrg_parse(root):
+	'''Parse an LRG file contained in an xml.etree.ElementTree object.
+	Returns: A list of exon coordinates for GRCh38'''
 	# create the empty list to store the output
 	data_list = []
 	# iterate through each exon in the LRG
@@ -82,6 +84,7 @@ def convert_coords(xml_root, sorted_data):
 
 
 def main():
+	'''Parse script input from command line arguments'''
 	parser = argparse.ArgumentParser(description='Parse an XML file to produce a BED file')
 	parser.add_argument('xml_file', nargs='+', help='Enter the names of the LRG file to parse')
 	args = parser.parse_args()
