@@ -91,21 +91,20 @@ def main():
 
 	# store the output from lrg_parse() in a variable to write to a file
 	files_to_parse = args.xml_file
-	print('BEDbot2000 is making a high quality beds for your inputs: ' + ', '.join(files_to_parse))
+	print('BEDbot2000 is making high quality beds for your inputs: ' + ', '.join(files_to_parse))
 	for f in files_to_parse:
 		print('parsing ' + f)
 		# call different functions depending on whether the XML file is 
 		# on the system or needs to be accessed from the web
-		F = f.upper()
-		if os.path.isfile(F):
-			data = lrg_parse(parse_file(F))
+		if os.path.isfile(f):
+			data = lrg_parse(parse_file(f))
 		else:
 			try:
-				data = lrg_parse(get_file(F))
+				data = lrg_parse(get_file(f.upper()))
 			except ET.ParseError:
 				print(f + ' does not exist. Why are you trying to break me?')
 				continue
-		file_name = F.split('.')[0]+'.bed'
+		file_name = f.split('.')[0]+'.bed'
 		write_file(data, file_name)
 		
 if __name__ == "__main__":
