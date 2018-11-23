@@ -37,6 +37,7 @@ def write_file(data, file_name):
 
 def get_file(lrg_num):
 	'''if the file is not already on the system get the file from the LRG website'''
+	print(lrg_num + ' not found on system, retrieving from internet. UGH.')
 	website = 'http://ftp.ebi.ac.uk/pub/databases/lrgex/'+ lrg_num +'.xml'
 	xml_text = requests.get(website)
 	# LRGs pending approval will have a different URL, so if the above web
@@ -45,6 +46,7 @@ def get_file(lrg_num):
 		website = 'http://ftp.ebi.ac.uk/pub/databases/lrgex/pending/'+ lrg_num +'.xml'
 		xml_text = requests.get(website)
 	root = ET.fromstring(xml_text.text)
+	print('nailed it!')
 	return root
 
 def convert_coords(xml_root, sorted_data):
@@ -86,14 +88,20 @@ def main():
 
 	# store the output from lrg_parse() in a variable to write to a file
 	files_to_parse = args.xml_file
+	print('BEDbot2000 is making a high quality beds for your inputs: ' + ', '.join(files_to_parse))
 	for f in files_to_parse:
+		print('parsing ' + f)
 		# call different functions depending on whether the XML file is 
 		# on the system or needs to be accessed from the web
 		F = f.upper()
 		if os.path.isfile(F):
 			data = lrg_parse(parse_file(F))
 		else:
-			data = lrg_parse(get_file(F))
+			try:
+				data = lrg_parse(get_file(F))
+			except ET.ParseError:
+				print(f + ' does not exist. Why are you trying to break me?')
+				continue
 		file_name = F.split('.')[0]+'.bed'
 		write_file(data, file_name)
 		
