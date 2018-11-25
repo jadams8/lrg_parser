@@ -1,13 +1,14 @@
 """Tests for lrg_parser"""
 import os, subprocess
+import xml.etree.ElementTree as ET
 import lrg_parser
 
 def test_creates_file():
     """Test that it creates a new file from an XML input"""
-    # Call from command line
+    # Call from command line using LRG_1 as example
     subprocess.call(['python', 'lrg_parser.py', 'data/LRG_1.xml'])
     # Assert that a file was output
-    assert os.path.isfile('data/LRG_1.bed')
+    assert os.path.isfile('data/LRG_1_20181125.bed')
 
 def test_all_exons():
     """Test all LRG_5 exon labels are present in first column of lrg_parser output"""
@@ -20,3 +21,5 @@ def test_all_exons():
     # Test that all expected exon labels are present
     for exon_label in exon_labels:
         assert exon_label in parsed_exons
+
+
