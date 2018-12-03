@@ -1,25 +1,25 @@
 """Tests for lrg_parser"""
-import os, subprocess
+import os, subprocess, difflib, time
 import xml.etree.ElementTree as ET
 import lrg_parser
 
-def test_creates_file():
-    """Test that it creates a new file from an XML input"""
-    # Call from command line using LRG_1 as example
-    subprocess.call(['python', 'lrg_parser.py', 'data/LRG_1.xml'])
-    # Assert that a file was output
-    assert os.path.isfile('data/LRG_1_20181125.bed')
+def test_write():
+    """Test that it writes a file with the correct name """
+    # write_file function writes the data to a file
+    lrg_parser.write_file('data', 'LRG_1.xml')
+    # Test that a file was output with the correct name (LRG_num_date.bed)
+    date_today = time.strftime('%Y%m%d')
+    assert os.path.isfile('LRG_1_'+date_today+'.bed')
 
-def test_all_exons():
-    """Test all LRG_5 exon labels are present in first column of lrg_parser output"""
-    # Create a list of exon labels expected in LRG_5
-    exon_labels = [str(number) for number in range(1, 14)]
-    exon_labels.extend(['14a', '14b', '14c', '15'])
-    # Create a list of exons parsed from LRG_5
-    parsed_data = lrg_parser.lrg_parse('data/LRG_5.xml')
-    parsed_exons = set([item[0] for item in parsed_data])
-    # Test that all expected exon labels are present
-    for exon_label in exon_labels:
-        assert exon_label in parsed_exons
-
-
+def test_LRG_web_input():
+    """Test that the text in the file downloaded using the script is the
+    same as the information in an XML file downloaded manually N.B. XML
+    file MUST be manually downloaded on the same day as this test is run"""
+    # open file downloaded manually and stored in 'data' directory
+    with open('data/LRG_1.xml', 'r') as file_1:
+        f1 = file_1.read()
+    # get file gets the xml data from the web as a string
+    f2 = lrg_parser.get_file('LRG_1')
+    # test that the manually downloaded and automatically downloaded
+    #strings are identical
+    assert f1 == f2
