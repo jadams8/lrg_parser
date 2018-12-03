@@ -21,10 +21,11 @@ def test_LRG_web_input():
     # get file gets the xml data from the web as a string
     f2 = lrg_parser.get_file('LRG_1')
     # test that the manually downloaded and automatically downloaded
-    #strings are identical
+    # strings are identical
     assert f1 == f2
 
 def test_LRG_input():
-    """Test that if the input is a """
+    """Test that if the input is an existing file, parse_file outputs
+    it as a string"""
     data = lrg_parser.parse_file('data/LRG_1.xml')
     assert isinstance(data, str)
