@@ -23,3 +23,8 @@ def test_LRG_web_input():
     # test that the manually downloaded and automatically downloaded
     #strings are identical
     assert f1 == f2
+
+def test_LRG_input():
+    """Test that if the input is a """
+    data = lrg_parser.parse_file('data/LRG_1.xml')
+    assert isinstance(data, str)
