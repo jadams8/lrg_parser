@@ -29,3 +29,15 @@ def test_LRG_input():
     it as a string"""
     data = lrg_parser.parse_file('data/LRG_1.xml')
     assert isinstance(data, str)
+
+def test_set_root_from_file():
+    """Test that the xml data string objects are converted to root 
+    objects for parsing for file inputs"""
+    root = lrg_parser.set_root(lrg_parser.parse_file('data/LRG_1.xml'))
+    assert isinstance(root, ET.Element)
+
+def test_set_root_from_name():
+    """Test that the xml data string objects are converted to root 
+    objects for parsing for LRG number inputs"""
+    root = lrg_parser.set_root(lrg_parser.get_file('LRG_1'))
+    assert isinstance(root, ET.Element)
