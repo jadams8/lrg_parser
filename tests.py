@@ -10,6 +10,7 @@ def test_write():
     # Test that a file was output with the correct name (LRG_num_date.bed)
     date_today = time.strftime('%Y%m%d')
     assert os.path.isfile('LRG_1_'+date_today+'.bed')
+    os.remove('LRG_1'+date_today+'.bed')
 
 def test_LRG_web_input():
     """Test that the text in the file downloaded using the script is the
