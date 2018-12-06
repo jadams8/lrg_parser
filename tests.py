@@ -5,6 +5,29 @@ import pytest
 import requests
 import lrg_parser
 
+# test_convert - Converts exon regions to coordinates? Compare output of conver_coords with test data.NM
+# test_write - Assert that function uses python write function JA
+# test_BED - Assert that output file is in BED format (tab-delimited records). Use test data. NM
+
+def test_parse():
+    """Test that all expected exon labels are parsed from LRG files."""
+    # Get exons for LRG 1
+    lrg1_root = lrg_parser.set_root(lrg_parser.parse_file('data/LRG_1.xml'))
+    lrg1_exon_data_tuple = (lrg_parser.lrg_parse(lrg1_root))
+    # Exon labels are the first element of each tuple in lrg1_exon_data_tupe. zip() is used to 
+    # collec the exons from the first elements. e.g.:
+    #     a = [(1,2,3), (4,5,6)]
+    #     zip(*a) = [(1,4), (2,5), (3,6)]
+    lrg1_exons = list(zip(*lrg1_exon_data_tuple))[0]
+    lrg1_truthset = open('data/LRG1_exons.list', 'r').read().split(",")
+    assert set(lrg1_exons) == set(lrg1_truthset)
+    # Get exons for LRG 5
+    lrg5_root = lrg_parser.set_root(lrg_parser.parse_file('data/LRG_5.xml'))
+    lrg5_exon_data_tuple = (lrg_parser.lrg_parse(lrg5_root))
+    lrg5_exons = list(zip(*lrg5_exon_data_tuple))[0]
+    lrg5_truthset = open('data/LRG5_exons.list', 'r').read().split(",")
+    assert set(lrg5_exons) == set(lrg5_truthset)
+
 def test_write():
     """Test that it writes a file with the correct name """
     # write_file function writes the data to a file
@@ -16,7 +39,7 @@ def test_write():
 
 # This test requires the user to take additional measures to ensure it
 # passes and is therefore not an appropriate test. It is not possible
-# to ensure the content of files are exactly the same as the content 
+# to ensure the content of files are exactly the same as the content
 # automatically changes depending on the date of access.
 #
 # def test_LRG_web_input():
