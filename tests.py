@@ -1,6 +1,8 @@
 """Tests for lrg_parser"""
 import os, subprocess, difflib, time
 import xml.etree.ElementTree as ET
+import pytest
+import requests
 import lrg_parser
 
 def test_write():
@@ -45,7 +47,6 @@ def test_length():
     f2 = lrg_parser.get_file('LRG_1')
     # check that the strings are exactly the same length
     assert len(f1) == len(f2)
-
 
 def test_LRG_input():
     """Test that if the input is an existing file, parse_file outputs

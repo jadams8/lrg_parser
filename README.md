@@ -17,6 +17,11 @@ pip install -r requirements.txt
 export PATH=$PATH:$(pwd) # Add to ~/.bashrc for access from every terminal session
 ```
 
+### Testing
+```
+pytest lrg_parser/tests.py
+```
+
 ## Dependencies
 Tested with python version 3.6 only. Requires an internet connection to install dependencies listed in *requirements.txt*.
 
