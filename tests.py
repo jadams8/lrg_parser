@@ -9,7 +9,7 @@ import lrg_parser
 # test_write - Assert that function uses python write function JA
 # test_BED - Assert that output file is in BED format (tab-delimited records). Use test data. NM
 
-def test_parse():
+def test_parse_lrg1():
     """Test that all expected exon labels are parsed from LRG files."""
     # Get exons for LRG 1
     lrg1_root = lrg_parser.set_root(lrg_parser.parse_file('data/LRG_1.xml'))
@@ -19,12 +19,17 @@ def test_parse():
     #     a = [(1,2,3), (4,5,6)]
     #     zip(*a) = [(1,4), (2,5), (3,6)]
     lrg1_exons = list(zip(*lrg1_exon_data_tuple))[0]
+    # Get exon label truthset from local data
     lrg1_truthset = open('data/LRG1_exons.list', 'r').read().split(",")
     assert set(lrg1_exons) == set(lrg1_truthset)
+
+def test_parse_lrg5():
+    """Test that all expected exon labels are parsed from LRG files."""
     # Get exons for LRG 5
     lrg5_root = lrg_parser.set_root(lrg_parser.parse_file('data/LRG_5.xml'))
     lrg5_exon_data_tuple = (lrg_parser.lrg_parse(lrg5_root))
     lrg5_exons = list(zip(*lrg5_exon_data_tuple))[0]
+    # Get exon label truthset from local data
     lrg5_truthset = open('data/LRG5_exons.list', 'r').read().split(",")
     assert set(lrg5_exons) == set(lrg5_truthset)
 
