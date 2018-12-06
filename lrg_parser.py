@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+'''lrg_parser.py
+
+Parse exon regions from an LRG record in XML format to a BED file containing GRCh38 regions
+'''
 import xml.etree.ElementTree as ET
 import os, argparse, fnmatch, re, requests, time
 
