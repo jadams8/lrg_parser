@@ -7,10 +7,9 @@ Create a tool that parses exon coordinates from LRG files in XML format. The out
 As a scientist, I want to find all the exon start and end co-ordinates in an LRG file correspinding to a gene so that I can identify whether my variant is coding or non-coding.
 
 ## Functional requirements
-* Take LRG file in XML format as input
-* Extract exon regions from LRG records
-* Convert LRG exon regions to genomic coordinates
-* Create BED-formatted file containing LRG exon regions as genomic coordinates
+* FR1 The application accepts an LRG file in XML format as input
+* FR2 The application accurately converts LRG exon regions to genomic coordinates for reference genome build GRCh38
+* FR3 The application outputs a BED-formatted file with calculated genomic coordinates
 
 ## Technical requirements
 * TR1 The application is compatible with all operating systems in genetics department os use
