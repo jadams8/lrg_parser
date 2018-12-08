@@ -5,17 +5,41 @@ import pytest
 import requests
 import lrg_parser
 
-# test_convert - Converts exon regions to coordinates? Compare output of conver_coords with test data.NM
-# test_write - Assert that function uses python write function JA
 # test_BED - Assert that output file is in BED format (tab-delimited records). Use test data. NM
+
+def test_convert_lrg1():
+    """Assert LRG_1 exon regions are accurately converted to GRCh38.p12 coordinates"""
+    # LRG_1 coordintates
+    lrg1_root = lrg_parser.set_root(lrg_parser.parse_file('data/LRG_1.xml'))
+    lrg1_exon_data_tuple = (lrg_parser.lrg_parse(lrg1_root))
+    lrg1_coordinates = lrg_parser.convert_coords(lrg1_root, lrg1_exon_data_tuple)
+    lrg1_coords_truthset_wheaders = [ tuple(line.strip().split(",")) for line in open('data/LRG_1_GRCh38_p12_coordinates.csv','r').readlines() ]
+    # Remove lines from truthset file that start with '#'. These lines contain headers of the truthset columns
+    lrg1_coords_truthset = list(filter(lambda x: not x[0].startswith('#'), lrg1_coords_truthset_wheaders))
+    for index in range(len(lrg1_coords_truthset)):
+        assert lrg1_coordinates[index][1] == lrg1_coords_truthset[index][1]
+        assert lrg1_coordinates[index][2] == lrg1_coords_truthset[index][2]
+
+def test_convert_lrg5():
+    """Assert LRG_5 exon regions are accurately converted to GRCh38.p12 coordinates"""
+    lrg5_root = lrg_parser.set_root(lrg_parser.parse_file('data/LRG_5.xml'))
+    lrg5_exon_data_tuple = (lrg_parser.lrg_parse(lrg5_root))
+    lrg5_coordinates = lrg_parser.convert_coords(lrg5_root, lrg5_exon_data_tuple)
+    lrg5_coords_truthset_wheaders = [ tuple(line.strip().split(",")) for line in open('data/LRG_5_GRCh38_p12_coordinates.csv','r').readlines() ]
+    # Remove lines from truthset file that start with '#'. These lines contain headers of the truthset columns
+    lrg5_coords_truthset = list(filter(lambda x: not x[0].startswith('#'), lrg5_coords_truthset_wheaders))
+    print(lrg5_coordinates)
+    for index in range(len(lrg5_coords_truthset)):
+        assert lrg5_coordinates[index][1] == lrg5_coords_truthset[index][1]
+        assert lrg5_coordinates[index][2] == lrg5_coords_truthset[index][2]
 
 def test_parse_lrg1():
     """Test that all expected exon labels are parsed from LRG files."""
     # Get exons for LRG 1
     lrg1_root = lrg_parser.set_root(lrg_parser.parse_file('data/LRG_1.xml'))
     lrg1_exon_data_tuple = (lrg_parser.lrg_parse(lrg1_root))
-    # Exon labels are the first element of each tuple in lrg1_exon_data_tupe. zip() is used to 
-    # collec the exons from the first elements. e.g.:
+    # Exon labels are the first element of each tuple in returned by lrg_parser.lrg_parse(). 
+    # zip() is used to merge the tuples by matching element indexes. e.g.:
     #     a = [(1,2,3), (4,5,6)]
     #     zip(*a) = [(1,4), (2,5), (3,6)]
     lrg1_exons = list(zip(*lrg1_exon_data_tuple))[0]
