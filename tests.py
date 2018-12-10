@@ -1,11 +1,33 @@
 """Tests for lrg_parser"""
-import os, subprocess, difflib, time
+import os, subprocess, difflib, time, sys
 import xml.etree.ElementTree as ET
 import pytest
 import requests
 import lrg_parser
 
-# test_BED - Assert that output file is in BED format (tab-delimited records). Use test data. NM
+def test_BED():
+    """Assert that output file is in BED format (tab-delimited records)."""
+    # Get list of files/directories in 'data/'. Used to get output file name after calling lrg_parser.py on data/LRG_1.xml
+    old_env = os.listdir('data')
+    sys.argv = ['lrg_parser.py', 'data/LRG_1.xml']
+    # Generate output BED for LRG_1.xml
+    lrg_parser.main()
+    new_env = os.listdir('data')
+    # Get BED file name
+    output_file_name = [ filename for filename in new_env if filename not in old_env ][0]
+    output_file_path = os.path.join('data',output_file_name)
+    # Read output BED as list
+    with open(output_file_path, 'r') as output_file:
+        BED_lines = output_file.readlines()
+    # Assert output file is compliant with BED file format: 
+    #   - Minimum of three input fields separated by tabs
+    #   - Records separated by new lines
+    for line in BED_lines:
+        assert len(line.split('\t')) >= 3
+        assert line.endswith('\n')
+    # Delete generated BED file
+    os.remove(output_file_path)
+
 
 def test_convert_lrg1():
     """Assert LRG_1 exon regions are accurately converted to GRCh38.p12 coordinates"""
