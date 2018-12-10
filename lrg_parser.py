@@ -11,33 +11,46 @@ import xml.etree.ElementTree as ET
 
 import requests
 
-def parse_file(xml_file):
-	'''read an input file as a string object'''
-	print('file found on system')
-	with open(xml_file, 'r') as input_file:
-		output = input_file.read()
-	return output
+def parse_file(filename):
+	"""Read a local input file as a Python string object."""
+	print('File found on system.')
+	with open(filename, 'r') as file_data:
+		file_string = file_data.read()
+	return file_string
 
 def lrg_parse(root):
-	'''Parse an LRG file contained in an xml.etree.ElementTree object.
-	Returns: A list of exon coordinates for GRCh38'''
-	# create the empty list to store the output
-	data_list = []
-	# iterate through each exon in the LRG
+	"""Get exons and exon regions from an input root object.
+
+	Args:
+	 	root (xml.etree.ElementTree): An ElementTree generated from an LRG file in XML format
+	Returns:
+	    sorted_data (List[Tuple[str]]): A list of tuples. Each tuple contains an exon region,
+			exon start and exon end values for the input LRG record.
+	"""
+	exon_tags = []
+	# Iterate through each exon tag in the LRG XML record
 	for exon in root.iter('exon'):
-		# ensure that the exon has a label so it is part of the transcript
+		# All exons tags describing transcripts have the attribute 'label'.
 		if 'label' in exon.attrib.keys():
-			for child in exon:
-				# make sure the only co-ordinates printed are the LRG co-ordinates
-				if list(root.iter('id'))[0].text == child.attrib['coord_system']:
-					# create a list of data that needs to be in the bed file
-					data_to_append = (exon.attrib['label'], child.attrib['start'], child.attrib['end'])
-					# only append data that is not already in the list to prevent duplications
-					if data_to_append not in data_list:
-						data_list.append(data_to_append)
-	# sort the data according to position in the genome
+			exon_tags.append(exon)
+
+	lrg_record_name = list(root.iter('id'))[0].text
+	# Create a list containing tuples of exon labels and their LRG record regions
+	data_list = []
+	# Exon tags contain nested coordinate tags with the exon, transcript and protein locations in the LRG record.
+	# Get data from the tag for exon regions, which has a 'coord_system' attribute matching the LRG record name.
+	for exon in exon_tags:
+		for child in exon:
+			if lrg_record_name == child.attrib['coord_system']:
+				data_to_append = (exon.attrib['label'], child.attrib['start'], child.attrib['end'])
+				if data_to_append not in data_list:
+					data_list.append(data_to_append)
+
+	# Sort the data according to position in the genome.
+	# Records with multiple transcripts append letters to exon label numbers.
+	# This sorting uses numerical then alphabetical order.
 	sorted_data = sorted(data_list, key=lambda line: int(re.split('[A-Za-z]+', line[0])[0]))
-	return(sorted_data)
+	return sorted_data
 
 def write_file(data, f_in):
 	'''write the data from parsing into a new bed file with the same name as the XML file'''
