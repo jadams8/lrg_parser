@@ -1,3 +1,8 @@
+#!/usr/bin/env python3
+'''lrg_parser.py
+
+Parse exon regions from an LRG record in XML format to a BED file containing GRCh38 regions
+'''
 import xml.etree.ElementTree as ET
 import os, argparse, fnmatch, re, requests, time
 
@@ -28,7 +33,7 @@ def lrg_parse(root):
 						data_list.append(data_to_append)
 	# sort the data according to position in the genome
 	sorted_data = sorted(data_list, key=lambda line: int(re.split('[A-Za-z]+', line[0])[0]))
-	return convert_coords(root, sorted_data)
+	return(sorted_data)
 
 def write_file(data, f_in):
 	'''write the data from parsing into a new bed file with the same name as the XML file'''
@@ -114,7 +119,9 @@ def main():
 			except ET.ParseError:
 				print(f + ' does not exist.')
 				continue
-		write_file(data, f)
+		# Convert exon regions to genomic coordinates for grch38
+		output_bed = convert_coords(xml_root, data)
+		write_file(output_bed, f)
 		print('bed file for ' + f + ' complete.')
 		
 if __name__ == "__main__":

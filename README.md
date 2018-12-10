@@ -8,8 +8,22 @@ Generate BED file from LRG XML files using exon coordinates. Two inputs are acce
 
 Documentation for the methods were generated with `pydoc`. These are available in docs/lrg_parser.txt
 
+## Installation
+### Unix command line
+```
+git clone https://github.com/jadams8/lrg_parser.git
+cd lrg_parser
+pip install -r requirements.txt
+export PATH=$PATH:$(pwd) # Add to ~/.bashrc for access from every terminal session
+```
+
+### Testing
+```
+pytest lrg_parser/tests.py
+```
+
 ## Dependencies
-The script relies on the third-party `requests` module. It has been tested with python version 3.6.
+Tested with python version 3.6 only. Requires an internet connection to install dependencies listed in *requirements.txt*.
 
 ## Usage
 ```
