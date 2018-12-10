@@ -3,9 +3,13 @@
 
 Parse exon regions from an LRG record in XML format to a BED file containing GRCh38 regions
 '''
+import argparse
+import os
+import re
+import time
 import xml.etree.ElementTree as ET
-import os, argparse, fnmatch, re, requests, time
 
+import requests
 
 def parse_file(xml_file):
 	'''read an input file as a string object'''
