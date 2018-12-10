@@ -3,10 +3,11 @@ import os, argparse, fnmatch, re, requests, time
 
 
 def parse_file(xml_file):
-	'''Will set the root from an XML file already stored on the system'''
-	lrg = ET.parse(xml_file)
-	root = lrg.getroot()
-	return root
+	'''read an input file as a string object'''
+	print('file found on system')
+	with open(xml_file, 'r') as input_file:
+		output = input_file.read()
+	return output
 
 def lrg_parse(root):
 	'''Parse an LRG file contained in an xml.etree.ElementTree object.
@@ -29,13 +30,15 @@ def lrg_parse(root):
 	sorted_data = sorted(data_list, key=lambda line: int(re.split('[A-Za-z]+', line[0])[0]))
 	return convert_coords(root, sorted_data)
 
-def write_file(data, file_name):
+def write_file(data, f_in):
 	'''write the data from parsing into a new bed file with the same name as the XML file'''
+	file_name = f_in.split('.')[0]+'_'+time.strftime('%Y%m%d')+'.bed'
 	with open(file_name, 'w') as myfile:
 		for my_tuple in data:
 			# reformat the list to tab seperated and different lines
 			my_list = "\t".join(my_tuple) + '\n'
 			myfile.write(my_list)
+	return file_name
 
 def get_file(lrg_num):
 	'''if the file is not already on the system get the file from the LRG website'''
@@ -47,8 +50,11 @@ def get_file(lrg_num):
 	if xml_text.status_code == 404:
 		website = 'http://ftp.ebi.ac.uk/pub/databases/lrgex/pending/'+ lrg_num +'.xml'
 		xml_text = requests.get(website)
-	root = ET.fromstring(xml_text.text)
-	print('retrieval successful')
+	return xml_text.text
+
+def set_root(xml_data):
+	root = ET.fromstring(xml_data)
+	print('root created successfully')
 	return root
 
 def convert_coords(xml_root, sorted_data):
@@ -82,7 +88,6 @@ def convert_coords(xml_root, sorted_data):
 		output.append(coords)
 	return output
 
-
 def main():
 	'''Parse script input from command line arguments'''
 	parser = argparse.ArgumentParser(description='Parse an XML file to produce a BED file')
@@ -97,16 +102,20 @@ def main():
 		# call different functions depending on whether the XML file is 
 		# on the system or needs to be accessed from the web
 		if os.path.isfile(f):
-			data = lrg_parse(parse_file(f))
+			xml_string = parse_file(f)
+			xml_root = set_root(xml_string)
+			data = lrg_parse(xml_root)
 		else:
 			try:
-				data = lrg_parse(get_file(f.upper()))
+				fname = f.upper()
+				xml_string = get_file(fname)
+				xml_root = set_root(xml_string)
+				data = lrg_parse(xml_root)
 			except ET.ParseError:
 				print(f + ' does not exist.')
 				continue
-		file_name = f.split('.')[0]+ '_'+ time.strftime('%Y%m%d') +'.bed'
-		write_file(data, file_name)
-		print('bed file for ' + f + ' written to ' + file_name)
+		write_file(data, f)
+		print('bed file for ' + f + ' complete.')
 		
 if __name__ == "__main__":
 	main()
