@@ -19,7 +19,7 @@ def parse_file(filename):
 	return file_string
 
 def lrg_parse(root):
-	"""Get exons and exon regions from an input root object.
+	"""Gets exons and exon regions from an input root object.
 
 	Args:
 	 	root (xml.etree.ElementTree): An ElementTree generated from an LRG file in XML format
@@ -35,7 +35,7 @@ def lrg_parse(root):
 			exon_tags.append(exon)
 
 	lrg_record_name = list(root.iter('id'))[0].text
-	# Create a list containing tuples of exon labels and their LRG record regions
+	# Create an empty list to append tuples of exon labels and their LRG record regions
 	data_list = []
 	# Exon tags contain nested coordinate tags with the exon, transcript and protein locations in the LRG record.
 	# Get data from the tag for exon regions, which has a 'coord_system' attribute matching the LRG record name.
@@ -47,20 +47,26 @@ def lrg_parse(root):
 					data_list.append(data_to_append)
 
 	# Sort the data according to position in the genome.
-	# Records with multiple transcripts append letters to exon label numbers.
+	# Records with multiple transcripts have exon label numbers followed by a letter for each transcript.
 	# This sorting uses numerical then alphabetical order.
 	sorted_data = sorted(data_list, key=lambda line: int(re.split('[A-Za-z]+', line[0])[0]))
 	return sorted_data
 
-def write_file(data, f_in):
-	'''write the data from parsing into a new bed file with the same name as the XML file'''
-	file_name = f_in.split('.')[0]+'_'+time.strftime('%Y%m%d')+'.bed'
-	with open(file_name, 'w') as myfile:
-		for my_tuple in data:
-			# reformat the list to tab seperated and different lines
-			my_list = "\t".join(my_tuple) + '\n'
-			myfile.write(my_list)
-	return file_name
+def write_file(data, file_name):
+	"""Writes data to a new file in BED format.
+
+	Args:
+		data (List[Tuple[int]]): Data to write in BED format
+		file_name (str): The name of an input file. Used to make prefix for output file.
+	"""
+	output_file_prefix = file_name.split('.')[0]
+    # Add current year, month and day to output BED file name
+	output_file_name = output_file_prefix + '_' + time.strftime('%Y%m%d') + '.bed'
+	with open(output_file_name, 'w') as output_file:
+		for data_tuple in data:
+			# Join data by tabs as per BED format. Separate with newline character.
+			bed_line = "\t".join(data_tuple) + '\n'
+			output_file.write(bed_line)
 
 def get_file(lrg_num):
 	'''if the file is not already on the system get the file from the LRG website'''
