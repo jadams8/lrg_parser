@@ -24,7 +24,7 @@ def lrg_parse(root):
 	Args:
 	 	root (xml.etree.ElementTree): An ElementTree generated from an LRG file in XML format
 	Returns:
-	    sorted_data (List[Tuple[str]]): A list of tuples. Each tuple contains an exon region,
+	    sorted_data (List[Tuple[str]]): A list of tuples. Each tuple contains an LRG exon label (sorted),
 			exon start and exon end values for the input LRG record.
 	"""
 	exon_tags = []
@@ -100,35 +100,45 @@ def set_root(xml_data):
 	return root
 
 def convert_coords(xml_root, sorted_data):
-	'''Convert LRG co-ordinates to GRCh38 coordinates in BED format'''
+	"""Convert LRG co-ordinates to GRCh38 coordinates.
+
+	Args:
+		xml_root (xml.etree.ElementTree): An object with methods for iterating over XML tags and data.
+		sorted_data (List[Tuple[str]]): A list of tuples. Each tuple contains an LRG exon label (sorted),
+			exon start and exon end values for the input LRG record.
+	Returns:
+		genome_coordinates (List[Tuple[str]]): 
+	"""
 	# Get GRCh38 data from xml_root (including coordinates)
 	for item in xml_root.iter('mapping'):
 		if item.attrib['coord_system'].startswith('GRCh38'):
 			grch38 = item.attrib
 			grch38_map = item.findall('mapping_span')[0].attrib
 	# Empty list for new string
-	output = []
+	genome_coordinates = []
 	# Loop over LRG exon coordinates
 	for xml_tuple in sorted_data:
-		# Set LRG locations for reference genome
-		genome_loc = int(grch38_map['other_start'])
-		genome_loc2 = int(grch38_map['other_end'])
+		# Get LRG locations for reference genome
+		genome_start = int(grch38_map['other_start'])
+		genome_end = int(grch38_map['other_end'])
 		exon_label, lrg_start_pre, lrg_end_pre = xml_tuple
-		# Set LRG strat and end coordinates ( -1 for addition/subtraction from reference genome )
+		# Set LRG start and end coordinates. Reduce by -1 for accurate addition/subtraction from reference genome
 		lrg_start = int(lrg_start_pre) - 1
-		lrg_end = int(lrg_end_pre) -1
-		# If reverse strand, swap genome start and end, multiply lrg coordinates by -1 to subtract
+		lrg_end = int(lrg_end_pre) - 1
+		# If LRG coordinates are on the reverse strand, swap genome start and end.
 		if grch38_map['strand'] == '-1':
-			genome_loc = genome_loc2
+			genome_start = genome_end
+			# Reverse strand requires lrg coordinates to be subtracted from genome coordinates.
+			# Multiple LRG coordinates by -1 to achieve this downstream.
 			lrg_start, lrg_end = map(lambda x: x*-1, [lrg_start, lrg_end])
-		# Set new coordinates tuple
+		# Created new tuple with GRChp38 coordinates
 		coords = (
-			'chr' + str(grch38['other_name']),  # chromosome number
-			str(genome_loc + lrg_start),  # grch38 start coordinates
-			str(genome_loc + lrg_end)  # grch38 end coordinates
+		    ('chr' + str(grch38['other_name'])),  # chromosome number
+		    str(genome_start + lrg_start),  # grch38 start coordinates
+		    str(genome_start + lrg_end)  # grch38 end coordinates
 		)
-		output.append(coords)
-	return output
+		genome_coordinates.append(coords)
+	return genome_coordinates
 
 def main():
 	'''Parse script input from command line arguments'''
