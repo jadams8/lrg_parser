@@ -57,7 +57,7 @@ def write_file(data, file_name):
 
 	Args:
 		data (List[Tuple[int]]): Data to write in BED format
-		file_name (str): The name of an input file. Used to make prefix for output file.
+		file_name (str): File name used to make prefix for output file.
 	"""
 	output_file_prefix = file_name.split('.')[0]
     # Add current year, month and day to output BED file name
@@ -69,8 +69,15 @@ def write_file(data, file_name):
 			output_file.write(bed_line)
 
 def get_file(lrg_num):
-	'''if the file is not already on the system get the file from the LRG website'''
+	"""Downloads LRG records from the LRG website.
+
+	Args:
+		lrg_num (str): The name of an LRG record to download
+	Returns:
+		xml_text.text (str): LRG record in XML format
+	"""
 	print(lrg_num + ' not found on system, retrieving from internet.')
+	# Set URL and download LRG data
 	website = 'http://ftp.ebi.ac.uk/pub/databases/lrgex/'+ lrg_num +'.xml'
 	xml_text = requests.get(website)
 	# LRGs pending approval will have a different URL, so if the above web
@@ -81,6 +88,13 @@ def get_file(lrg_num):
 	return xml_text.text
 
 def set_root(xml_data):
+	"""Read an XML string as a python object.
+	
+	Args:
+		xml_data (str): An xml file in a python string
+	Returns:
+		root (xml.etree.ElementTree): An object with methods to iterate over XML tags and data
+	"""
 	root = ET.fromstring(xml_data)
 	print('root created successfully')
 	return root
