@@ -20,8 +20,3 @@ As a scientist, I want to find all the exon start and end co-ordinates in an LRG
 * TR5 If the LRG input needs to be fetched from the internet the only acceptable reason for failure will be lack of internet connection or LRG website failure
 * TR6 If the LRG input needs to be fetched from the internet, the output will be produced in less than 10 seconds 95% of the time
 * TR7 If the LRG input needs to be fetched from the internet, the output will be produced in less than 30 seconds 99% of the time
-
-## Project completion checklist:
-* Comments and usage documentation
-* Unit tests
-* Executes without failure (Does the program run?)

@@ -170,6 +170,6 @@ def main():
 		output_bed = convert_coords(xml_root, data)
 		write_file(output_bed, f)
 		print('bed file for ' + f + ' complete.')
-		
+	
 if __name__ == "__main__":
 	main()
