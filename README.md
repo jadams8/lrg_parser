@@ -6,10 +6,25 @@ Generate BED file from LRG XML files using exon coordinates. Two inputs are acce
 * LRG files in XML format.
 * An LRG number, e.g. `LRG_5`. XML files are retrieved from the API for these inputs.
 
-Documentation for the methods were generated with `pydoc`. These are available in docs/lrg_parser.txt
+Output files are written to the current working directory if the LRG record is downloaded from the internet. Otherwise, output files are written to the same path as the given input file. To name the BED file, lrg_parser.py removes file extensions from the input and appends a timestamp in Year-Month-Day format:
+> lrg_parser.py LRG_1.xml ---> LRG_1_20181211.bed
+
+## Installation
+### Unix command line
+```
+git clone https://github.com/jadams8/lrg_parser.git
+cd lrg_parser
+pip install -r requirements.txt
+export PATH=$PATH:$(pwd) # Add to ~/.bashrc for access from every terminal session
+```
+
+### Testing
+```
+pytest lrg_parser/tests.py
+```
 
 ## Dependencies
-The script relies on the third-party `requests` module. It has been tested with python version 3.6.
+Tested with python version 3.6 only. Requires an internet connection to install dependencies listed in *requirements.txt*.
 
 ## Usage
 ```
