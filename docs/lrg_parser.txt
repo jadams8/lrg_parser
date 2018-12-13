@@ -1,0 +1,29 @@
+Help on module lrg_parser:
+
+NAME
+    lrg_parser
+
+FUNCTIONS
+    convert_coords(xml_root, sorted_data)
+        Convert LRG co-ordinates to GRCh38 coordinates in BED format
+    
+    get_file(lrg_num)
+        if the file is not already on the system get the file from the LRG website
+    
+    lrg_parse(root)
+        Parse an LRG file contained in an xml.etree.ElementTree object.
+        Returns: A list of exon coordinates for GRCh38
+    
+    main()
+        Parse script input from command line arguments
+    
+    parse_file(xml_file)
+        Will set the root from an XML file already stored on the system
+    
+    write_file(data, file_name)
+        write the data from parsing into a new bed file with the same name as the XML file
+
+FILE
+    /home/nana/Documents/lrg_parser/lrg_test/lrg_parser.py
+
+
