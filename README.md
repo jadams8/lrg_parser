@@ -19,12 +19,15 @@ export PATH=$PATH:$(pwd) # Add to ~/.bashrc for access from every terminal sessi
 ```
 
 ### Testing
+Tests are run with the pytest library using the following command:
 ```
 pytest lrg_parser/tests.py
 ```
 
-## Dependencies
-Tested with python version 3.6 only. Requires an internet connection to install dependencies listed in *requirements.txt*.
+## Limitations
+* Tested with python version 3.6 only.
+* Requires an internet connection to install dependencies listed in *requirements.txt*.
+* Not tested on Microsoft Windows platforms.
 
 ## Usage
 ```

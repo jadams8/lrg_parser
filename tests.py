@@ -88,27 +88,6 @@ def test_write():
     assert os.path.isfile('LRG_1_'+date_today+'.bed')
     os.remove('LRG_1_'+date_today+'.bed')
 
-# This test requires the user to take additional measures to ensure it
-# passes and is therefore not an appropriate test. It is not possible
-# to ensure the content of files are exactly the same as the content
-# automatically changes depending on the date of access.
-#
-# def test_LRG_web_input():
-#     """Test that the text in the file downloaded using the script is the
-#     same as the information in an XML file downloaded manually N.B. XML
-#     file MUST be manually downloaded on the same day as this test is run"""
-#     # open file downloaded manually and stored in 'data' directory
-#     with open('data/LRG_1.xml', 'r') as file_1:
-#         f1 = file_1.read()
-#     # get file gets the xml data from the web as a string
-#     f2 = lrg_parser.get_file('LRG_1')
-#     # test that the manually downloaded and automatically downloaded
-#     # strings are identical
-#     assert f1 == f2
-
-# Best way to check the content matches is to check that both strings
-# are the same length, rather than being identical.
-
 def test_length():
     """Test that the automatically downloaded XML using the script
     and a manually downloaded XML for the same LRG are the same 
