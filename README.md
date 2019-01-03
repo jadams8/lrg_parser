@@ -1,5 +1,6 @@
 # lrg_parser v1.0
 *Created by: Jes Adams (jadams8) and Nana Mensah (nmns93)*
+Developed in accordance to the Association for Clinical Genetic Sciences' guidelines for development and validation of software. Available at: http://www.acgs.uk.com/media/1025075/ngs_bioinformatics_bpg_final_version_2016.pdf
 
 ## About
 Generate BED file from LRG XML files using exon coordinates. Two inputs are accepted by the script in any combination:
